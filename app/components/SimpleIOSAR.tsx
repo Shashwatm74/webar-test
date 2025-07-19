@@ -33,6 +33,9 @@ export default function SimpleIOSAR({ src, alt = "3D Model", style }: SimpleIOSA
           modelViewer.setAttribute('reveal', 'auto');
           // Set camera to front view of the model (adjust as needed)
           modelViewer.setAttribute('camera-orbit', '0deg 75deg 2.5m');
+          // Allow user to zoom/rotate before AR
+          modelViewer.setAttribute('min-camera-orbit', '0deg 75deg 2.5m');
+          modelViewer.setAttribute('max-camera-orbit', '0deg 75deg 2.5m');
           // Set initial scale (smaller, so user isn't inside the model)
           modelViewer.setAttribute('scale', '0.01 0.01 0.01');
           // Set initial orientation (Y axis rotation example, adjust as needed)
@@ -41,9 +44,6 @@ export default function SimpleIOSAR({ src, alt = "3D Model", style }: SimpleIOSA
           modelViewer.setAttribute('shadow-intensity', '0');
           modelViewer.setAttribute('environment-image', 'neutral');
           modelViewer.setAttribute('exposure', '1');
-          modelViewer.setAttribute('disable-zoom', '');
-          modelViewer.setAttribute('disable-pan', '');
-          modelViewer.setAttribute('disable-tap', '');
           // Remove any possible translucency
           modelViewer.style.opacity = '1';
           modelViewer.style.filter = 'none';
@@ -69,8 +69,15 @@ export default function SimpleIOSAR({ src, alt = "3D Model", style }: SimpleIOSA
           // AR session events - hide instructions when AR starts
           modelViewer.addEventListener('ar-status', (event: any) => {
             if (event.detail.status === 'session-started') {
+              // Lock zoom and fit model in AR
+              modelViewer.setAttribute('min-camera-orbit', '0deg 75deg 2.5m');
+              modelViewer.setAttribute('max-camera-orbit', '0deg 75deg 2.5m');
+              modelViewer.setAttribute('scale', '0.01 0.01 0.01');
               setShowInstructions(false);
             } else if (event.detail.status === 'not-presenting') {
+              // Allow zoom/rotate again after AR
+              modelViewer.setAttribute('min-camera-orbit', 'auto auto auto');
+              modelViewer.setAttribute('max-camera-orbit', 'auto auto auto');
               setShowInstructions(true);
             }
           });
