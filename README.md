@@ -10,10 +10,12 @@ A Next.js application that provides cross-platform 3D model rendering with AR su
 - **Automatic device detection** using `navigator.userAgent`
 
 ### ✅ iOS Implementation
-- Model-viewer with GLB support
-- AR Quick Look integration for AR functionality
-- Camera controls and auto-rotation
-- Optimized for iOS Safari and Chrome
+- **Enhanced AR Camera Access**: Custom IOSARViewer with early camera permission requests
+- **Model-viewer Integration**: Uses @google/model-viewer with optimized AR settings
+- **AR Quick Look Support**: Full iOS native AR experience with camera feed
+- **WebXR Fallback**: Supports both WebXR and scene-viewer AR modes
+- **Camera Controls**: Pinch, zoom, rotate, and AR camera integration
+- **Optimized for iOS Safari and Chrome**: Performance tuned for iOS devices
 
 ### ✅ Android Implementation
 - Three.js WebXR scene with hit-testing
@@ -68,17 +70,14 @@ pnpm lint
 The app automatically detects the user's device and renders the appropriate component:
 
 ```tsx
-import ModelViewer from "./components/ModelViewer";
+import IOSARViewer from "./components/IOSARViewer";
 import ARScene from "./components/ARscenes";
 
 // Device detection happens automatically
 {isIOS ? (
-  <ModelViewer
+  <IOSARViewer
     src="/model.glb"
-    ar
-    arModes="scene-viewer quick-look"
-    autoRotate
-    cameraControls
+    alt="3D Model"
     style={{ width: "100%", height: "100%" }}
   />
 ) : (
@@ -92,18 +91,23 @@ Place your 3D models in the `public/` directory:
 - `model.glb` - Primary model file (works on both platforms)
 - `model.usdz` - Optional iOS-optimized model for better AR experience
 
-### Testing Device Detection
+### Testing Device Detection & Camera Access
 
-Visit `/test` to see device detection results and verify the implementation.
+Visit `/test` to see:
+- Device detection results and user agent
+- AR capability testing
+- Camera permission status testing
+- Platform-specific troubleshooting tips
 
 ## Architecture
 
 ### Components
 
 1. **`app/page.tsx`** - Main component with device detection logic
-2. **`app/components/ModelViewer.tsx`** - iOS model-viewer wrapper
-3. **`app/components/ARscenes.tsx`** - Android Three.js AR implementation
-4. **`app/test/page.tsx`** - Device detection test page
+2. **`app/components/IOSARViewer.tsx`** - Enhanced iOS AR viewer with camera access
+3. **`app/components/ModelViewer.tsx`** - Alternative iOS model-viewer wrapper
+4. **`app/components/ARscenes.tsx`** - Android Three.js AR implementation
+5. **`app/test/page.tsx`** - Device detection and camera permission test page
 
 ### Device Detection Logic
 
@@ -174,9 +178,11 @@ The app can be deployed to any platform supporting Node.js:
 ### Common Issues
 
 1. **AR not working on iOS**
-   - Ensure HTTPS is enabled
-   - Check model file is accessible
-   - Verify AR Quick Look support
+   - Ensure HTTPS is enabled (required for camera access)
+   - Check camera permissions in Settings &gt; Safari &gt; Camera
+   - Verify model file is accessible and in GLB format
+   - Try using Safari instead of other browsers
+   - Check the troubleshooting guide at `/docs/ios-troubleshooting.md`
 
 2. **Three.js errors on Android**
    - Check WebXR browser support
