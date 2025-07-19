@@ -2,7 +2,7 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 // @ts-ignore
-import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader.js";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
 const loadARButton = async () => {
   const module = await import("three/examples/jsm/webxr/ARButton.js");
@@ -34,15 +34,16 @@ export default function ARScene() {
       const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
       scene.add(light);
 
-      // Load .obj model
-      const loader = new OBJLoader();
-      const model = await loader.loadAsync("/model.obj");
-      model.scale.set(0.02, 0.02, 0.02); // smaller default scale
+      // Load .glb model
+      const loader = new GLTFLoader();
+      const gltf = await loader.loadAsync("/model.glb");
+      const model = gltf.scene;
+      model.scale.set(0.01, 0.01, 0.01); // smaller scale
       model.visible = false;
       modelRef.current = model;
       scene.add(model);
 
-      // Reticle
+      // Reticle for placement
       const ring = new THREE.RingGeometry(0.05, 0.06, 32).rotateX(-Math.PI / 2);
       const mat = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
       reticle = new THREE.Mesh(ring, mat);
@@ -50,17 +51,19 @@ export default function ARScene() {
       reticle.visible = false;
       scene.add(reticle);
 
+      // AR Controller for tap-to-place
       const controller = renderer.xr.getController(0);
       scene.add(controller);
 
       controller.addEventListener("select", () => {
         if (reticle.visible && modelRef.current) {
           modelRef.current.position.setFromMatrixPosition(reticle.matrix);
+          modelRef.current.position.y += 0.02; // Raise slightly above ground
           modelRef.current.visible = true;
         }
       });
 
-      // Pinch to zoom gesture handler
+      // Handle pinch gestures
       canvas.addEventListener("touchmove", (event) => {
         if (event.touches.length === 2 && modelRef.current) {
           const dx = event.touches[0].clientX - event.touches[1].clientX;
@@ -73,10 +76,10 @@ export default function ARScene() {
             const model = modelRef.current;
             const newScale = model.scale.x * scaleFactor;
 
-            // Clamp scale between min and max
-            const clampedScale = Math.max(0.005, Math.min(1, newScale));
-            model.scale.set(clampedScale, clampedScale, clampedScale);
+            const clamped = Math.max(0.002, Math.min(1, newScale));
+            model.scale.set(clamped, clamped, clamped);
           }
+
           prevDistance.current = distance;
         }
       });
@@ -85,7 +88,7 @@ export default function ARScene() {
         prevDistance.current = null;
       });
 
-      // AR Button
+      // Start AR session
       const ARButton = await loadARButton();
       document.body.appendChild(
         ARButton.createButton(renderer, { requiredFeatures: ["hit-test"] })
@@ -117,10 +120,6 @@ export default function ARScene() {
             if (pose) {
               reticle.visible = true;
               reticle.matrix.fromArray(pose.transform.matrix);
-
-              // Optional: make model even closer to the surface
-              reticle.position.setFromMatrixPosition(reticle.matrix);
-              reticle.position.y += 0.01;
             }
           } else {
             reticle.visible = false;
