@@ -98,9 +98,10 @@ export default function TestPage() {
       <div style={{ background: "#1a1a1a", padding: "20px", borderRadius: "8px", marginBottom: "20px" }}>
         <h3>🔧 Expected Behavior:</h3>
         <ul style={{ paddingLeft: "20px" }}>
-          <li><strong>iOS devices:</strong> Will use IOSARViewer with model-viewer and AR Quick Look</li>
+          <li><strong>iOS devices:</strong> Will use SimpleIOSAR with camera-first AR experience (like Android)</li>
           <li><strong>Android/Other devices:</strong> Will use Three.js AR Scene with WebXR</li>
-          <li><strong>Camera access:</strong> Required for AR functionality on both platforms</li>
+          <li><strong>Both platforms:</strong> Tap AR button → Camera opens → Tap to place object</li>
+          <li><strong>No separate screens:</strong> Object appears directly in camera view on both platforms</li>
         </ul>
       </div>
 

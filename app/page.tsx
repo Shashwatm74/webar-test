@@ -1,7 +1,7 @@
 "use client";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
-import IOSARViewer from "./components/IOSARViewer";
+import SimpleIOSAR from "./components/SimpleIOSAR";
 
 const ARScene = dynamic(() => import("./components/ARscenes"), { ssr: false });
 
@@ -28,7 +28,7 @@ export default function Home() {
   return (
     <main style={{ width: "100vw", height: "100vh", background: "#000" }}>
       {isIOS ? (
-        <IOSARViewer
+        <SimpleIOSAR
           src="/model.glb"
           alt="3D Model"
           style={{ width: "100%", height: "100%" }}

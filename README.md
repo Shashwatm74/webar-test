@@ -10,12 +10,12 @@ A Next.js application that provides cross-platform 3D model rendering with AR su
 - **Automatic device detection** using `navigator.userAgent`
 
 ### ✅ iOS Implementation
-- **Enhanced AR Camera Access**: Custom IOSARViewer with early camera permission requests
-- **Model-viewer Integration**: Uses @google/model-viewer with optimized AR settings
-- **AR Quick Look Support**: Full iOS native AR experience with camera feed
-- **WebXR Fallback**: Supports both WebXR and scene-viewer AR modes
-- **Camera Controls**: Pinch, zoom, rotate, and AR camera integration
-- **Optimized for iOS Safari and Chrome**: Performance tuned for iOS devices
+- **Simple AR Integration**: Matches Android experience with camera-first approach
+- **Model-viewer with AR**: Direct camera access and AR placement like Android
+- **No Separate Screens**: Object appears directly in camera view, not on black screen
+- **Tap-to-Place**: Same interaction model as Android (tap AR button, then tap to place)
+- **WebXR + Quick Look**: Supports both AR modes for maximum compatibility
+- **Optimized for iOS Safari and Chrome**: Clean, simple AR experience
 
 ### ✅ Android Implementation
 - Three.js WebXR scene with hit-testing
@@ -70,12 +70,12 @@ pnpm lint
 The app automatically detects the user's device and renders the appropriate component:
 
 ```tsx
-import IOSARViewer from "./components/IOSARViewer";
+import SimpleIOSAR from "./components/SimpleIOSAR";
 import ARScene from "./components/ARscenes";
 
 // Device detection happens automatically
 {isIOS ? (
-  <IOSARViewer
+  <SimpleIOSAR
     src="/model.glb"
     alt="3D Model"
     style={{ width: "100%", height: "100%" }}
@@ -104,10 +104,13 @@ Visit `/test` to see:
 ### Components
 
 1. **`app/page.tsx`** - Main component with device detection logic
-2. **`app/components/IOSARViewer.tsx`** - Enhanced iOS AR viewer with camera access
-3. **`app/components/ModelViewer.tsx`** - Alternative iOS model-viewer wrapper
-4. **`app/components/ARscenes.tsx`** - Android Three.js AR implementation
-5. **`app/test/page.tsx`** - Device detection and camera permission test page
+2. **`app/components/SimpleIOSAR.tsx`** - Simple iOS AR viewer (Android-like experience)
+3. **`app/components/ARscenes.tsx`** - Android Three.js AR implementation
+4. **`app/test/page.tsx`** - Device detection and camera permission test page
+
+_Legacy components available:_
+- **`app/components/IOSARViewer.tsx`** - Enhanced iOS AR viewer with camera access
+- **`app/components/ModelViewer.tsx`** - Alternative iOS model-viewer wrapper
 
 ### Device Detection Logic
 
