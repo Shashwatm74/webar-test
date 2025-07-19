@@ -136,6 +136,9 @@ export default function ARScene() {
         if (modelRef.current) {
           modelRef.current.visible = false;
         }
+        if (reticleRef.current) {
+          reticleRef.current.visible = false;
+        }
         setModelVisible(false);
         setShowInstructions(true);
       });
