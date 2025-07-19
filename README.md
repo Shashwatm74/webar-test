@@ -1,36 +1,214 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# WebAR Cross-Platform 3D Model Viewer
+
+A Next.js application that provides cross-platform 3D model rendering with AR support for both iOS and Android devices.
+
+## Features
+
+### ✅ Cross-Platform Support
+- **iOS**: Uses `@google/model-viewer` for optimal 3D model display and AR integration
+- **Android**: Uses Three.js with WebXR for full AR functionality
+- **Automatic device detection** using `navigator.userAgent`
+
+### ✅ iOS Implementation
+- Model-viewer with GLB support
+- AR Quick Look integration for AR functionality
+- Camera controls and auto-rotation
+- Optimized for iOS Safari and Chrome
+
+### ✅ Android Implementation
+- Three.js WebXR scene with hit-testing
+- Touch controls (pinch-to-zoom, drag-to-move, double-tap to reset)
+- Full AR placement and interaction features
+- WebXR-compatible AR experience
+
+### ✅ Model Support
+- **GLB files**: Supported on both platforms
+- **USDZ files**: Can be added for enhanced iOS AR experience (optional)
+- Automatic fallbacks and error handling
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+- Node.js 18+ 
+- pnpm (recommended) or npm
+
+### Installation
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+# Clone the repository
+git clone <repository-url>
+cd webar-test
+
+# Install dependencies
+pnpm install
+
+# Start development server
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Development
+```bash
+# Start development server with Turbopack
+pnpm dev
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+# Build for production
+pnpm build
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Start production server
+pnpm start
 
-## Learn More
+# Run linting
+pnpm lint
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Usage
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Basic Implementation
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The app automatically detects the user's device and renders the appropriate component:
 
-## Deploy on Vercel
+```tsx
+import ModelViewer from "./components/ModelViewer";
+import ARScene from "./components/ARscenes";
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+// Device detection happens automatically
+{isIOS ? (
+  <ModelViewer
+    src="/model.glb"
+    ar
+    arModes="scene-viewer quick-look"
+    autoRotate
+    cameraControls
+    style={{ width: "100%", height: "100%" }}
+  />
+) : (
+  <ARScene />
+)}
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Model Files
+
+Place your 3D models in the `public/` directory:
+- `model.glb` - Primary model file (works on both platforms)
+- `model.usdz` - Optional iOS-optimized model for better AR experience
+
+### Testing Device Detection
+
+Visit `/test` to see device detection results and verify the implementation.
+
+## Architecture
+
+### Components
+
+1. **`app/page.tsx`** - Main component with device detection logic
+2. **`app/components/ModelViewer.tsx`** - iOS model-viewer wrapper
+3. **`app/components/ARscenes.tsx`** - Android Three.js AR implementation
+4. **`app/test/page.tsx`** - Device detection test page
+
+### Device Detection Logic
+
+```tsx
+const [isIOS, setIsIOS] = useState(false);
+
+useEffect(() => {
+  const ua = navigator.userAgent;
+  setIsIOS(/iPad|iPhone|iPod/.test(ua));
+}, []);
+```
+
+### Key Technologies
+
+- **Frontend**: Next.js 15, React 19, TypeScript
+- **iOS 3D**: `@google/model-viewer`
+- **Android AR**: Three.js, WebXR
+- **Styling**: Tailwind CSS
+- **Package Manager**: pnpm
+
+## Browser Support
+
+### iOS
+- ✅ Safari 14+
+- ✅ Chrome for iOS
+- ✅ Firefox for iOS
+- ✅ AR Quick Look support
+
+### Android
+- ✅ Chrome 79+ (WebXR support)
+- ✅ Samsung Internet
+- ✅ Firefox Reality
+- ⚠️ Requires WebXR-compatible browser for AR features
+
+### Desktop
+- ✅ Chrome, Firefox, Safari, Edge
+- ⚠️ AR features require mobile device
+
+## Performance Considerations
+
+- **Dynamic imports**: Model-viewer is loaded only on iOS devices
+- **SSR handling**: Client-side device detection prevents hydration mismatches
+- **Lazy loading**: AR components are dynamically imported
+- **Error handling**: Graceful fallbacks for unsupported devices
+
+## Deployment
+
+### Vercel (Recommended)
+```bash
+# Deploy to Vercel
+vercel --prod
+```
+
+### Other Platforms
+The app can be deployed to any platform supporting Node.js:
+- Netlify
+- AWS Amplify
+- Railway
+- Digital Ocean App Platform
+
+### Environment Requirements
+- HTTPS required for AR features
+- WebXR requires secure context
+- Camera permissions needed for AR
+
+## Troubleshooting
+
+### Common Issues
+
+1. **AR not working on iOS**
+   - Ensure HTTPS is enabled
+   - Check model file is accessible
+   - Verify AR Quick Look support
+
+2. **Three.js errors on Android**
+   - Check WebXR browser support
+   - Ensure camera permissions
+   - Verify secure context (HTTPS)
+
+3. **Model not loading**
+   - Check file path and size
+   - Verify GLB file format
+   - Check console for network errors
+
+### Debug Mode
+
+Visit `/test` to see:
+- Device detection results
+- User agent string
+- Platform-specific behavior
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test on both iOS and Android
+5. Submit a pull request
+
+## License
+
+MIT License - see LICENSE file for details.
+
+## Acknowledgments
+
+- Google Model Viewer team
+- Three.js community
+- WebXR specification authors
