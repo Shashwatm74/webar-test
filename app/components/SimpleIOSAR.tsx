@@ -31,6 +31,10 @@ export default function SimpleIOSAR({ src, alt = "3D Model", style }: SimpleIOSA
           modelViewer.setAttribute('touch-action', 'pan-y');
           modelViewer.setAttribute('loading', 'eager');
           modelViewer.setAttribute('reveal', 'auto');
+          // Set camera to front view of the model (adjust as needed)
+          modelViewer.setAttribute('camera-orbit', '0deg 75deg 2.5m');
+          // Set initial scale (smaller, so user isn't inside the model)
+          modelViewer.setAttribute('scale', '0.01 0.01 0.01');
           // Set initial orientation (Y axis rotation example, adjust as needed)
           modelViewer.setAttribute('rotation', '0deg 0deg 0deg');
           // Maximize visibility
