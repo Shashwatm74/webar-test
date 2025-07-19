@@ -31,6 +31,18 @@ export default function SimpleIOSAR({ src, alt = "3D Model", style }: SimpleIOSA
           modelViewer.setAttribute('touch-action', 'pan-y');
           modelViewer.setAttribute('loading', 'eager');
           modelViewer.setAttribute('reveal', 'auto');
+          // Set initial orientation (Y axis rotation example, adjust as needed)
+          modelViewer.setAttribute('rotation', '0deg 0deg 0deg');
+          // Maximize visibility
+          modelViewer.setAttribute('shadow-intensity', '0');
+          modelViewer.setAttribute('environment-image', 'neutral');
+          modelViewer.setAttribute('exposure', '1');
+          modelViewer.setAttribute('disable-zoom', '');
+          modelViewer.setAttribute('disable-pan', '');
+          modelViewer.setAttribute('disable-tap', '');
+          // Remove any possible translucency
+          modelViewer.style.opacity = '1';
+          modelViewer.style.filter = 'none';
           
           // Make it fullscreen like Android
           modelViewer.style.width = '100%';
