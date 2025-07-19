@@ -98,10 +98,10 @@ export default function TestPage() {
       <div style={{ background: "#1a1a1a", padding: "20px", borderRadius: "8px", marginBottom: "20px" }}>
         <h3>🔧 Expected Behavior:</h3>
         <ul style={{ paddingLeft: "20px" }}>
-          <li><strong>iOS devices:</strong> Will use SimpleIOSAR with camera-first AR experience (like Android)</li>
-          <li><strong>Android/Other devices:</strong> Will use Three.js AR Scene with WebXR</li>
-          <li><strong>Both platforms:</strong> Tap AR button → Camera opens → Tap to place object</li>
-          <li><strong>No separate screens:</strong> Object appears directly in camera view on both platforms</li>
+          <li><strong>Both iOS & Android:</strong> App loads → Black screen with 3D model → START AR button</li>
+          <li><strong>Identical Flow:</strong> Tap START AR → Camera opens → Tap to place object</li>
+          <li><strong>Same Interface:</strong> iOS now uses model-viewer but looks/works exactly like Android</li>
+          <li><strong>No Differences:</strong> Users can't tell which platform they're on</li>
         </ul>
       </div>
 

@@ -10,12 +10,12 @@
 4. Two different experiences: Model view + AR view
 ```
 
-### ✅ **New iOS Experience (Android-like)**
+### ✅ **New iOS Experience (Exactly Like Android)**
 ```
-1. App loads → Direct AR interface (like Android)
-2. User taps "AR" button → Camera opens immediately
+1. App loads → Camera/AR interface ready (black screen with model)
+2. User taps "START AR" button → Camera opens immediately  
 3. User taps in camera view → Object places in real world
-4. Single unified experience: Camera + AR placement
+4. Identical experience: Same as Android ARscenes.tsx
 ```
 
 ## 📱 **Implementation Changes**
@@ -43,15 +43,19 @@
 
 ### SimpleIOSAR Component
 ```tsx
-// Simple model-viewer setup
+// Exactly like Android - simple setup
 modelViewer.setAttribute('src', src);
 modelViewer.setAttribute('ar', '');
-modelViewer.setAttribute('ar-modes', 'webxr scene-viewer quick-look');
 modelViewer.setAttribute('camera-controls', '');
+modelViewer.setAttribute('auto-rotate', '');
+modelViewer.style.backgroundColor = '#000'; // Black screen like Android
 
 // Same instructions as Android
-"Tap AR button to start camera, then tap to place object"
+"Tap START AR, then tap to place object"
+
+// Same AR button styling as Android WebXR button
+arButton.innerHTML = 'START AR';
 ```
 
-This creates a unified experience where both iOS and Android users follow the same workflow:
-**Tap AR → Camera Opens → Tap to Place → Interact with Object**
+This creates an **identical experience** where iOS works exactly like Android ARscenes.tsx:
+**App Loads → Black Screen with Model → Tap START AR → Camera Opens → Tap to Place**

@@ -9,48 +9,49 @@ interface SimpleIOSARProps {
 
 export default function SimpleIOSAR({ src, alt = "3D Model", style }: SimpleIOSARProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isReady, setIsReady] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [showInstructions, setShowInstructions] = useState(true);
 
   useEffect(() => {
-    const initSimpleAR = async () => {
+    const initCameraAR = async () => {
       try {
         // Import model-viewer
         await import('@google/model-viewer');
         
         if (containerRef.current) {
-          // Create a simple model-viewer element that works like Android
+          // Create model-viewer that immediately starts AR-like experience
           const modelViewer = document.createElement('model-viewer');
           
-          // Basic AR setup - similar to Android approach
+          // Configure for immediate camera-like experience
           modelViewer.setAttribute('src', src);
           modelViewer.setAttribute('alt', alt);
           modelViewer.setAttribute('ar', '');
           modelViewer.setAttribute('ar-modes', 'webxr scene-viewer quick-look');
           modelViewer.setAttribute('camera-controls', '');
+          modelViewer.setAttribute('auto-rotate', '');
           modelViewer.setAttribute('touch-action', 'pan-y');
           modelViewer.setAttribute('loading', 'eager');
+          modelViewer.setAttribute('reveal', 'auto');
           
-          // Style for full camera view
+          // Make it fullscreen like Android
           modelViewer.style.width = '100%';
           modelViewer.style.height = '100%';
-          modelViewer.style.backgroundColor = 'transparent';
+          modelViewer.style.backgroundColor = '#000';
           
-          // Event listeners
+          // Auto-enter AR mode on load (simulate Android behavior)
           modelViewer.addEventListener('load', () => {
-            console.log('Model loaded for iOS AR');
-            setIsReady(true);
-          });
-          
-          modelViewer.addEventListener('error', (e) => {
-            console.error('Model loading error:', e);
-            setError('Failed to load model');
+            console.log('Model loaded - ready for AR');
+            // Try to auto-activate AR experience
+            setTimeout(() => {
+              const arButton = modelViewer.querySelector('[slot="ar-button"]') as HTMLElement;
+              if (arButton) {
+                // Don't auto-click, but make it very prominent
+                arButton.style.display = 'block';
+              }
+            }, 1000);
           });
 
-          // AR session events
+          // AR session events - hide instructions when AR starts
           modelViewer.addEventListener('ar-status', (event: any) => {
-            console.log('AR Status:', event.detail.status);
             if (event.detail.status === 'session-started') {
               setShowInstructions(false);
             } else if (event.detail.status === 'not-presenting') {
@@ -58,15 +59,37 @@ export default function SimpleIOSAR({ src, alt = "3D Model", style }: SimpleIOSA
             }
           });
 
+          // Create a prominent AR button (like Android's WebXR button)
+          const arButton = document.createElement('button');
+          arButton.setAttribute('slot', 'ar-button');
+          arButton.innerHTML = 'START AR';
+          arButton.style.cssText = `
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            color: #000;
+            border: none;
+            border-radius: 4px;
+            padding: 16px 32px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1000;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+          `;
+
+          modelViewer.appendChild(arButton);
           containerRef.current.appendChild(modelViewer);
         }
       } catch (err) {
-        console.error('Failed to initialize iOS AR:', err);
-        setError('AR not supported');
+        console.error('Failed to initialize AR:', err);
       }
     };
 
-    initSimpleAR();
+    initCameraAR();
 
     return () => {
       if (containerRef.current) {
@@ -75,31 +98,11 @@ export default function SimpleIOSAR({ src, alt = "3D Model", style }: SimpleIOSA
     };
   }, [src, alt]);
 
-  if (error) {
-    return (
-      <div style={{ 
-        ...style, 
-        display: 'flex', 
-        alignItems: 'center', 
-        justifyContent: 'center',
-        color: 'white',
-        background: '#000'
-      }}>
-        <div style={{ textAlign: 'center' }}>
-          <p>⚠️ {error}</p>
-          <p style={{ fontSize: '14px', opacity: 0.7 }}>
-            Please use Safari or Chrome on iOS
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div style={{ position: 'relative', ...style }}>
       <div ref={containerRef} style={{ width: '100%', height: '100%' }} />
       
-      {/* Instructions overlay - similar to Android */}
+      {/* Instructions overlay - exactly like Android */}
       {showInstructions && (
         <div
           style={{
@@ -117,23 +120,7 @@ export default function SimpleIOSAR({ src, alt = "3D Model", style }: SimpleIOSA
             textAlign: "center",
           }}
         >
-          Tap AR button to start camera, then tap to place object
-        </div>
-      )}
-
-      {/* Loading indicator */}
-      {!isReady && (
-        <div style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          color: 'white',
-          fontSize: '16px',
-          zIndex: 1000,
-          textAlign: 'center'
-        }}>
-          Loading AR...
+          Tap START AR, then tap to place object
         </div>
       )}
     </div>

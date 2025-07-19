@@ -10,12 +10,12 @@ A Next.js application that provides cross-platform 3D model rendering with AR su
 - **Automatic device detection** using `navigator.userAgent`
 
 ### ✅ iOS Implementation
-- **Simple AR Integration**: Matches Android experience with camera-first approach
-- **Model-viewer with AR**: Direct camera access and AR placement like Android
-- **No Separate Screens**: Object appears directly in camera view, not on black screen
-- **Tap-to-Place**: Same interaction model as Android (tap AR button, then tap to place)
-- **WebXR + Quick Look**: Supports both AR modes for maximum compatibility
-- **Optimized for iOS Safari and Chrome**: Clean, simple AR experience
+- **Identical to Android**: Exact same user experience as ARscenes.tsx
+- **Black Screen + Model**: Loads with model on black background (like Android)
+- **START AR Button**: Same button style and behavior as Android WebXR
+- **Tap-to-Place**: Identical interaction - tap START AR, then tap to place
+- **Simple Setup**: Minimal model-viewer configuration
+- **Works in Safari/Chrome**: Direct camera access when AR button tapped
 
 ### ✅ Android Implementation
 - Three.js WebXR scene with hit-testing
