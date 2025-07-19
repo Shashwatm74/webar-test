@@ -38,7 +38,7 @@ export default function ARScene() {
       const loader = new GLTFLoader();
       const gltf = await loader.loadAsync("/model.glb");
       const model = gltf.scene;
-      model.scale.set(0.01, 0.01, 0.01); // smaller scale
+      model.scale.set(0.001, 0.001, 0.001); // much smaller default size // smaller scale
       model.visible = false;
       modelRef.current = model;
       scene.add(model);
